@@ -35,7 +35,7 @@ def test_similarity(target, embed):
         body={
             "size": 5,
             "query":script_query,
-            "_source": {"includes":["idx"]}
+            "_source": {"includes":["idx", "text"]}
         }
     )
     result=[]
