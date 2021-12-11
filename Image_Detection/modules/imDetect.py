@@ -16,7 +16,7 @@ cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.7   # set a custom testing threshold
 predictor = DefaultPredictor(cfg)
 
 
-def cropImg(img: bytes):
+def cropImg(img: bytes) -> list[bytes]:
     """
     bytes 형태로 인코딩된 이미지를 받아서 이미지에 해당되는 bytes 이미지를 반환합니다.
 
@@ -38,7 +38,7 @@ def cropImg(img: bytes):
     crop_imgs = []
     for box in range(len(output['instances'])):
         if output['instances'][box].get_fields()['pred_classes'].item() == 4: # 이미지 Label에 해당하는 부분만 사용함
-            x1, y1, x2, y2 = output['instances'][box].get_fields()['pred_boxes'].tensor[0].to('cpu')
+            x1, y1, x2, y2 = output['instances'][box].get_fields()['pred_boxes'].tensor[0].to('cpu') # 예측 결과 언패킹
 
             crop = dec_img[int(y1):int(y2), int(x1):int(x2), :]
             crop_imgs.append(crop)

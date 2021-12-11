@@ -12,7 +12,7 @@ def get_vision_ocr(img: bytes) -> 'list[str]':
     img: 바이트 단위로 인코딩된 이미지 파일.
 
     [출력]
-    result: 인식된 글자가 문장 단위로 정렬되어 list형태로 반환됩니다.
+    result: 인식된 글자가 문;장 단위로 정렬되어 list형태로 반환됩니다.
     """
 
     # vision으로 detect
@@ -29,6 +29,20 @@ def get_vision_ocr(img: bytes) -> 'list[str]':
 
     return result
 
+def get_image_search(imgs: list[bytes]):
+    """
+    Google Cloud Vision API를 사용해서 유사한 이미지가 있는 사이트의 URL을 확인합니다.
+    
+    [입력 파라미터]
+    img: 바이트 단위로 인코딩된 이미지 파일의 list. 각 원소는 이미지 하나씩을 포함합니다.
+
+    [출력]
+    result: 검색된 URL주소들의 리스트. 각 원소는 동일 인덱스의 이미지와 같은 배열을 입력받습니다.
+    """
+
+    for img in imgs:
+        print(img)
+        
 if __name__ == '__main__':
 
     """
