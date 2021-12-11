@@ -91,7 +91,7 @@ def test_similarity(search_text):
     response=es.search(
         index=index_name,
         body={
-            "size": 5,
+            "size": 7,
             "query":script_query,
             "_source": {"includes":["idx", "title", "snippet"]}
         }
@@ -134,12 +134,6 @@ def initialize_search_list():
     es.indices.refresh(index=index_name)
 
 
-# if __name__ == '__main__':
-#     es = Elasticsearch(["elasticsearch"], PORT=9200, http_auth=("elastic", "123456"))
-    # initialize_search_list()
-    # search_urls = search(search_text)
-    # crawling(search_urls)
-    # result = test_similarity(search_text)
 
 
     
