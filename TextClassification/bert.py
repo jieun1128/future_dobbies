@@ -79,17 +79,17 @@ def BertModel(sentences, PATH):
                         attention_mask=b_input_mask)
     logits = outputs[0] # bring loss
     logits = logits.detach().cpu().numpy() # move data to cpu
-    return np.argmax(logits[0]) # return 0 or 1
+    return np.argmax(logits) # return 0 or 1
 
 def DropAd(input_dict):
     sentences = input_dict['text']
     for i in sentences:
-        temp = BertModel(i, "./classifi.ver1")
+        temp = BertModel(i, "./classifi.ver2")
         if(temp==1): sentences.remove(i)
     input_dict['text'] = sentences
     return input_dict
 
-def Send2ELK():
+# def Send2ELK():
     
 
 if __name__ == '__main__':
