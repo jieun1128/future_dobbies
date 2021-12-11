@@ -56,27 +56,6 @@ def test_similarity(target, embed):
 # 텍스트 임베딩 함수
 def insert_search_list(embed):
     # data = list(cursor.fetchall())
-    
-    index_name="test_similarity"
-    if es.indices.exists(index=index_name):
-        es.indices.delete(index=index_name)
-    # 인덱스 생성
-    es.indices.create(index=index_name, body={
-        "mappings":{
-            "properties":{
-                "idx":{
-                    "type" :"integer"
-                },
-                "text":{
-                    "type":"text"
-                },
-                "text-vector":{
-                    "type": "dense_vector",
-                    "dims": 512
-                }
-            }
-        }
-    })
 
     # 데이터 집어넣기
     for i in range(len(data)):
@@ -99,8 +78,29 @@ def insert_search_list(embed):
 def initialize_search_list():
     os.environ["TFHUB_CACHE_DIR"] = "/tmp/tfhub"
     embed = hub.KerasLayer("https://tfhub.dev/google/universal-sentence-encoder/4")
-    insert_search_list(embed)
-    test_similarity(target,embed)
+    #insert_search_list(embed)
+
+    index_name="test_similarity"
+    if es.indices.exists(index=index_name):
+        es.indices.delete(index=index_name)
+    # 인덱스 생성
+    es.indices.create(index=index_name, body={
+        "mappings":{
+            "properties":{
+                "idx":{
+                    "type" :"integer"
+                },
+                "text":{
+                    "type":"text"
+                },
+                "text-vector":{
+                    "type": "dense_vector",
+                    "dims": 512
+                }
+            }
+        }
+    })
+    #test_similarity(target,embed)
 
 
 if __name__ == '__main__':
