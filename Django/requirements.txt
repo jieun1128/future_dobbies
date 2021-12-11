@@ -2,3 +2,5 @@ Django==3.2.6
 gunicorn==20.1.0
 elasticsearch
 tensorflow==2.5.0
+djangorestframework
+drf-yasg
