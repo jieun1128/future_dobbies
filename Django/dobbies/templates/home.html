@@ -2,11 +2,155 @@
 {% load static %}
 
 {% block content %}
-<input type='file' id='image_file' />
-	<input type='button' value='Load' onclick='LoadImage();' />
-	<canvas id="canvas"></canvas>
 
-	<input type='button' value='Crop' onclick='CropImage();' />
-	<canvas id="canvas_crop"></canvas>
+ <!-- Page Wrapper -->
+	<div id="wrapper">
 
+		<!-- Sidebar -->
+		<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+			<!-- Sidebar - Brand -->
+			<a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'home' %}">
+				<div class="sidebar-brand-icon rotate-n-15">
+					<i class="fas fa-laptop-code"></i>
+					<!-- <i class="fas fa-code"></i> -->
+				</div>
+				<div class="sidebar-brand-text mx-3">URL FINDER</div>
+			</a>
+
+			<!-- Divider -->
+			<hr class="sidebar-divider my-0">
+
+			<!-- Nav Item - Dashboard -->
+			<li class="nav-item">
+				<a class="nav-link" href="{% url 'home' %}">
+					<!-- <i class="fas fa-fw fa-tachometer-alt"></i> -->
+					<i class="fas fa-hat-wizard"></i>
+					<span>TEAM DOBIES</span></a>
+			</li>
+
+			<!-- Divider -->
+			
+
+			<!-- Divider -->
+			<hr class="sidebar-divider d-none d-md-block">
+
+			<!-- Sidebar Toggler (Sidebar) -->
+			<div class="text-center d-none d-md-inline">
+				<button class="rounded-circle border-0" id="sidebarToggle"></button>
+			</div>
+
+		</ul>
+		<!-- End of Sidebar -->
+
+		<!-- Content Wrapper -->
+		<div id="content-wrapper" class="d-flex flex-column">
+
+			<!-- Main Content -->
+			<div id="content">
+
+				<!-- Topbar -->
+				<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+					<!-- Sidebar Toggle (Topbar) -->
+					<button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+						<i class="fa fa-bars"></i>
+					</button>
+
+					
+
+				</nav>
+				<!-- End of Topbar -->
+
+				<!-- Begin Page Content -->
+				<div class="container-fluid">
+					<h1 class="h3 mb-4 text-gray-800">Blank Page</h1>
+					<div class="row">
+						
+						<div class="col-lg-6">
+							<div class="card shadow mb-4">
+                                <div class="card-header py-3">
+									
+									<a class="btn btn-info btn-icon-split">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-info-circle"></i>
+                                        </span>
+                                        <span>&nbsp;<input type='file' id='image_file' /></span>
+                                    </a>
+									
+									<a class="btn btn-primary btn-icon-split" type="button" onclick="LoadImage();">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-flag"></i>
+                                        </span>
+                                        <span class="text">LOAD</span>
+                                    </a>
+									<!-- <input type='file' id='image_file' />
+									<input type='button' value='Load' onclick='LoadImage();' /> -->
+                                    <!-- <h6 class="m-0 font-weight-bold text-primary">Basic Card Example</h6> -->
+                                </div>
+                                <div class="card-body", style="margin: 0 auto;">
+									<canvas id="canvas"></canvas>
+                                </div>
+                            </div>
+							
+							
+						</div>
+						<div class="col-lg-6">
+							<div class="card shadow mb-4">
+                                <div class="card-header py-3">
+									<a class="btn btn-success btn-icon-split" type="button" onclick="CropImage();">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-check"></i>
+                                        </span>
+                                        <span class="text">CROP</span>
+										<!-- <input type='button' value='Crop' onclick='CropImage();' /> -->
+                                    </a>
+									
+                                    <!-- <h6 class="m-0 font-weight-bold text-primary">Basic Card Example</h6> -->
+                                </div>
+                                <div class="card-body", style="margin: 0 auto;">
+                                    
+									<canvas id="canvas_crop"></canvas>
+                                </div>
+                            </div>
+							
+						</div>
+						
+						<script src="{% static 'js/crop.js' %}"></script>
+
+					</div>
+
+				</div>
+				<!-- /.container-fluid -->
+
+			</div>
+			<!-- End of Main Content -->
+
+			<!-- Footer -->
+			<footer class="sticky-footer bg-white">
+				<div class="container my-auto">
+					<div class="copyright text-center my-auto">
+						<span>DGU Farm Project &copy; Team Future Dobies</span>
+					</div>
+				</div>
+			</footer>
+			<!-- End of Footer -->
+
+		</div>
+		<!-- End of Content Wrapper -->
+
+	</div>
+	<!-- End of Page Wrapper -->
+
+	<!-- Scroll to Top Button-->
+	
+	<!-- Bootstrap core JavaScript-->
+	<script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+	<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+	<!-- Core plugin JavaScript-->
+	<script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+	<!-- Custom scripts for all pages-->
+	<script src="{% static 'js/sb-admin-2.min.js' %}"></script>
 {% endblock %}
