@@ -32,7 +32,7 @@ def cropImg(img: bytes):
     dec_img = cv2.imdecode(dec_img, flags=1)
 
     # 모델 예측
-    output = predictor(img)
+    output = predictor(dec_img)
 
     # 예측된 결과로 이미지만 잘라서 저장
     crop_imgs = []
@@ -40,7 +40,7 @@ def cropImg(img: bytes):
         if output['instances'][box].get_fields()['pred_classes'].item() == 4: # 이미지 Label에 해당하는 부분만 사용함
             x1, y1, x2, y2 = output['instances'][box].get_fields()['pred_boxes'].tensor[0].to('cpu')
 
-            crop = dec_img[x1:x2, y1:y2, :]
+            crop = dec_img[int(y1):int(y2), int(x1):int(x2), :]
             crop_imgs.append(crop)
             cv2.imshow(f"{box}", crop)
 
@@ -59,7 +59,7 @@ if __name__ == '__main__':
     테스트를 위해 따로 실행됐을 경우, 임의의 샘플 이미지를 불러와서 실행하도록 진행합니다.
     """
     print(os.path.dirname(__file__))
-    file_name = './Notebook/sampleImages/NewsWithImages.png'
+    file_name = './Notebook/sampleImages/NewsWithImagesSmall.png'
 
     # bytes 형태로 불러와 진 것을 가정합니다.
     with io.open(file_name, 'rb') as image_file:
@@ -67,6 +67,4 @@ if __name__ == '__main__':
     
     result = cropImg(content)
 
-    cv2.waitkey()
-
-    print(result)
+    cv2.waitKey()
