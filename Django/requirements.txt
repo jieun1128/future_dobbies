@@ -4,3 +4,5 @@ elasticsearch
 tensorflow==2.5.0
 djangorestframework
 drf-yasg
+google-api-python-client
+beautifulsoup4
