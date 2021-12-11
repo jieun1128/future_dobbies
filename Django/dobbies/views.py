@@ -11,10 +11,17 @@ from .searchTest import search, crawling, test_similarity, initialize_search_lis
 
  
 
-class HOME(APIView):
-    def get(self, request):
-        return render(request, 'home.html')
 
+def home(request):
+    return render(request, 'home.html')
+
+
+def found(request):
+    return render(request, 'found.html')
+
+def decode(request):
+    imgdecode = request.POST['hidden']
+    return render(request, 'found.html', {'imgdc':imgdecode})
 
 class searchTEXT(APIView):
     @swagger_auto_schema(tags=["검색 수행"],

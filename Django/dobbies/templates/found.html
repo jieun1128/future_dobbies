@@ -64,76 +64,39 @@
 
 				<!-- Begin Page Content -->
 				<div class="container-fluid">
-					<h1 class="h3 mb-4 text-gray-800">이미지를 첨부하고 수정하세요.</h1>
+					<h1 class="h3 mb-4 text-gray-800">결과창입니다.</h1>
 					<div class="row">
 						
 						<div class="col-lg-6">
 							<div class="card shadow mb-4">
                                 <div class="card-header py-3">
-									
-									<a class="btn btn-info btn-icon-split">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-info-circle"></i>
-                                        </span>
-                                        <span>&nbsp;<input type='file' id='image_file' /></span>
-                                    </a>
-									
-									<a class="btn btn-primary btn-icon-split" type="button" onclick="LoadImage();">
-                                        <span class="icon text-white-50">
-                                            <i class="fas fa-flag"></i>
-                                        </span>
-                                        <span class="text">LOAD</span>
-                                    </a>
-									<!-- <input type='file' id='image_file' />
-									<input type='button' value='Load' onclick='LoadImage();' /> -->
-                                    <!-- <h6 class="m-0 font-weight-bold text-primary">Basic Card Example</h6> -->
+									<h6 class="m-0 font-weight-bold text-primary">사용한 이미지</h6>
                                 </div>
                                 <div class="card-body", style="margin: 0 auto;">
-									<canvas id="canvas"></canvas>
+                                    <img src="{{imgdc}}" width="300px"/>
+									<!-- <canvas id="copyCanvas"></canvas> -->
                                 </div>
                             </div>
 							
 							
 						</div>
-						<div class="col-lg-6">
-							<div class="card shadow mb-4">
-                                <div class="card-header py-3">
-									<a class="btn btn-success btn-icon-split" type="button" onclick="CropImage();">
-										<span class="icon text-white-50">
-											<i class="fas fa-check"></i>
-										</span>
-										<span class="text">CROP</span>
-											<!-- <input type='button' value='Crop' onclick='CropImage();' /> -->
-									</a>
-									
-									
-                                    <!-- <h6 class="m-0 font-weight-bold text-primary">Basic Card Example</h6> -->
-                                </div>
-                                <div class="card-body", style="margin: 0 auto;">
-                                    
-									<canvas id="canvas_crop"></canvas>
+						<div class="col-md-6 mb-4">
+                            <div class="card border-left-success shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="font-weight-bold text-success mb-1">
+                                                URL : </div>
+                                                <br>
+                                            <div class="h3 mb-0 font-weight-bold text-gray-800">url 결과</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-code fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
-							<form action="{% url 'decode' %}" method="post" onclick="CropImage();">
-								{%csrf_token%}
-								<input type="hidden" id="hidden" name="hidden"/>
-								<!-- <a class="btn btn-danger btn-icon-split" type="submit" href="/" onclick="CropImage();">
-									<span class="icon text-white-50">
-										<i class="fas fa-arrow-right"></i>
-									</span>
-									<span class="text">URL 검색하기</span>
-								</a> -->
-								<!-- <input type="submit" onchange="doit();" id="file" /> -->
-								<button class="btn btn-danger btn-icon-split" type="submit">
-									<span class="icon text-white-50">
-										<i class="fas fa-arrow-right"></i>
-									</span>
-									<span class="text">URL 검색하기</span>
-								</button>
-							</form>
-							
-						</div>
+                        </div>
 						
 						<script src="{% static 'js/crop.js' %}"></script>
 
