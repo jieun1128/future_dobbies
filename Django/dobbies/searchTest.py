@@ -7,13 +7,30 @@ import os
 import requests
 from bs4 import BeautifulSoup
 
-API_KEY = ''
+API_KEY = 'AIzaSyAtY_rbheZD4u3tDiz9vPlXGRr74QaPxOI'
 
-ENGINE_ID = ''
+ENGINE_ID = '70807978d05fc0a7e'
 
 embed = hub.KerasLayer("https://tfhub.dev/google/universal-sentence-encoder/4")
 es = Elasticsearch(["elasticsearch"], PORT=9200, http_auth=("elastic", "123456"))
 index_name="test_similarity"
+
+def searchImage(text_url, image_url):
+    search_result = []
+    for i in image_url:
+        store = True 
+        service = build("customsearch", "v1", developerKey=API_KEY)
+        res = service.cse().list(q=i, cx=ENGINE_ID).execute()
+        for j in text_url:
+            if res['items'][0]['link'] in j['url']:
+                store = False 
+        if store :
+            search_temp = {}
+            search_temp['url'] = res['items'][0]['link']
+            search_temp['title'] = res['items'][0]['title']
+            search_temp['snippet'] = res['items'][0]['snippet']
+            search_result.append(search_temp)
+    return search_result
 
 # 검색 수행하기 
 def search(search_text):
@@ -58,7 +75,7 @@ def crawling(urls):
         try:
             embeddings=embed([description])
             text_vector=np.array(embeddings[0]).tolist()
-            doc={'idx':i+1,'text':description, 'title':title, 'snippet':snippet, 'text-vector':text_vector}
+            doc={'idx':i+1,'text':description, 'title':title, 'snippet':snippet, 'url':url['url'], 'text-vector':text_vector}
         except:
             print('no data')
             break
@@ -93,12 +110,12 @@ def test_similarity(search_text):
         body={
             "size": 7,
             "query":script_query,
-            "_source": {"includes":["idx", "title", "snippet"]}
+            "_source": {"includes":["idx", "title", "snippet", "url"]}
         }
     )
     result=[]
     for hit in response["hits"]["hits"]:
-        tmp={"id":hit["_source"]["idx"], "score":hit["_score"], "title":hit["_source"]["title"]}
+        tmp={"id":hit["_source"]["idx"], "score":hit["_score"], "title":hit["_source"]["title"], "snippet":hit["_source"]["snippet"], "url":hit["_source"]["url"]}
         result.append(tmp)
 
     return result
@@ -122,6 +139,9 @@ def initialize_search_list():
                     "type":"text"
                 },
                 "text":{
+                    "type":"text"
+                },
+                "url":{
                     "type":"text"
                 },
                 "text-vector":{
