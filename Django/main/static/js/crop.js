@@ -57,7 +57,8 @@ var clsImage;
 		// 이미지를 crop 하여서 하단 Canvas 에 그려준다.
 		function CropImage()
 		{
-			var canvas = document.getElementById("canvas");
+			var canvas = document.getElementById("canvas"),
+				hidden = document.getElementById('hidden');
 
 			img = new Image();
 			img.onload = function(){
@@ -66,9 +67,12 @@ var clsImage;
 				canvas.height = iCropHeight;
 				var ctx = canvas.getContext("2d");
 				ctx.drawImage( img, iCropLeft, iCropTop, iCropWidth, iCropHeight, 0, 0, iCropWidth, iCropHeight );
+				hidden.value = canvas.toDataURL();
 			};
 
 			img.src = canvas.toDataURL();
+			
+			
 		}
 
 		// 마우스 이동에 따른 Crop 사각 박스을 이동하기 위한 이벤트 핸들러를 등록한다.
@@ -128,3 +132,22 @@ var clsImage;
 				bDrag = false;
 			};
 		}
+
+		function tossImage()
+		{
+			var canvas = document.getElementById("canvas_crop"),
+				hidden = document.getElementById('tossed');
+
+			img = new Image();
+			img.onload = function(){
+				var canvas = document.getElementById("tossed");
+				canvas.width = iCropWidth;
+				canvas.height = iCropHeight;
+			};
+
+			img.src = canvas.toDataURL();
+			tossed.value = canvas.toDataURL();
+			
+		}
+
+		
