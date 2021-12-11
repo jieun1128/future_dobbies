@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<input type='file' id='image_file' />
+	<input type='button' value='Load' onclick='LoadImage();' />
+	<canvas id="canvas"></canvas>
+
+	<input type='button' value='Crop' onclick='CropImage();' />
+	<canvas id="canvas_crop"></canvas>
+
+{% endblock %}
