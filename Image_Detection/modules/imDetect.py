@@ -30,6 +30,7 @@ def cropImg(img: bytes) -> 'list[bytes]':
     # 이미지 디코딩 실시
     dec_img = np.frombuffer(img, dtype=np.uint8)
     dec_img = cv2.imdecode(dec_img, flags=1)
+    dec_img = cv2.cvtColor(dec_img, cv2.COLOR_BGR2RGB)
 
     # 모델 예측
     output = predictor(dec_img)
@@ -46,7 +47,7 @@ def cropImg(img: bytes) -> 'list[bytes]':
     # 이미지를 바이트로 다시 인코딩
     result = []
     for crop in crop_imgs:
-        result.append(crop.tobytes())
+        result.append(cv2.imencode('.jpg', crop)[1].tobytes())
 
     return result
     
