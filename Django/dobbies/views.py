@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view 
 from rest_framework.response import Response 
 from rest_framework.views import APIView
-from searchTest import insert_search_list, test_similarity
+# from searchTest import insert_search_list, test_similarity
  
 
 class HOME(APIView):
@@ -10,8 +10,8 @@ class HOME(APIView):
         return render(request, 'home.html')
 
 
-class searchTEXT(APIView):
-    def get(self, request):
+# class searchTEXT(APIView):
+#     def get(self, request):
 
-        return
+#         return
 
