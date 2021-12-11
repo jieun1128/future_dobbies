@@ -42,8 +42,6 @@ def cropImg(img: bytes) -> list[bytes]:
 
             crop = dec_img[int(y1):int(y2), int(x1):int(x2), :]
             crop_imgs.append(crop)
-            cv2.imshow(f"{box}", crop)
-
 
     # 이미지를 바이트로 다시 인코딩
     result = []
@@ -66,5 +64,3 @@ if __name__ == '__main__':
         content = image_file.read()
     
     result = cropImg(content)
-
-    cv2.waitKey()
