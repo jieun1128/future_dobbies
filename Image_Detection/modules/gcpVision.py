@@ -32,7 +32,7 @@ def get_vision_ocr(img: bytes) -> 'list[str]':
 
     return result
 
-def get_image_search(imgs: list[bytes])-> 'list[list[str]]':
+def get_image_search(imgs: 'list[bytes]')-> 'list[list[str]]':
     """
     Google Cloud Vision API를 사용해서 유사한 이미지가 있는 사이트의 URL을 확인합니다.
     

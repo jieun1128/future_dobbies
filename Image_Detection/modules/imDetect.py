@@ -16,7 +16,7 @@ cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.7   # set a custom testing threshold
 predictor = DefaultPredictor(cfg)
 
 
-def cropImg(img: bytes) -> list[bytes]:
+def cropImg(img: bytes) -> 'list[bytes]':
     """
     bytes 형태로 인코딩된 이미지를 받아서 이미지에 해당되는 bytes 이미지를 반환합니다.
 
@@ -56,7 +56,6 @@ if __name__ == '__main__':
     """
     테스트를 위해 따로 실행됐을 경우, 임의의 샘플 이미지를 불러와서 실행하도록 진행합니다.
     """
-    print(os.path.dirname(__file__))
     file_name = './Notebook/sampleImages/NewsWithImagesSmall.png'
 
     # bytes 형태로 불러와 진 것을 가정합니다.
