@@ -5,4 +5,5 @@ urlpatterns = [
     url('home', views.home, name='home'),
     url('found', views.found, name="found"),
     url('decod', views.decode, name="decode"),
+    url('search',  views.searchTEXT.as_view(), name='search'),
 ]
