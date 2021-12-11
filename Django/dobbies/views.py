@@ -1,4 +1,3 @@
-from logging import log
 from django.db import reset_queries
 from django.shortcuts import render 
 from rest_framework.decorators import api_view 
@@ -9,6 +8,7 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from .serealizer import SearchBodySerializer
 from .searchTest import search, crawling, test_similarity, initialize_search_list, searchImage
+
  
 
 class HOME(APIView):
@@ -34,7 +34,9 @@ class searchTEXT(APIView):
             image_urls = request.data.get('imageURL', None)
         except :
             image_urls = ''
+
         search_urls.extend(searchImage(search_urls, image_urls))
+
         crawling(search_urls)
         result = test_similarity(texts)
 
