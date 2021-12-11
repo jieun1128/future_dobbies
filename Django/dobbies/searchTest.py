@@ -1,22 +1,80 @@
 from elasticsearch import Elasticsearch
-import tensorflow as tf
+from googleapiclient.discovery import build
 import tensorflow_hub as hub
 import numpy as np
 import time
 import os
+import requests
+from bs4 import BeautifulSoup
 
-data = [
-    "강자인 소니와 마이크로소프트(MS)가 최신형 비디오 게임기인 플레이스테이션5(PS5)와 X박스 시리즈X를 지난해 11월에 출시했고 현재로 1년을 맞",
-    "[이뉴스투데이 김영민 기자] 차세대 콘솔 게임기 패권을 놓고 기대를 모았던 소니 플레이스테이션5(PS5)와 마이크로소프트 엑스박스 시리즈 X/S의",
-    "지난해 11월 소니와 MS가 나란히 차세대 콘솔기기를 발표하면서 시장에서는 ... 소니 플레이스테이션과 마이크로소프트(MS) 엑스박스로 대표되는 콘솔",
-    "[아이티데일리] 마이크로소프트(MS)와 소니가 새로운 비디오 게임기를 출시했다. MS는 500달러짜리 X박스 시리즈 X와 300달러짜리 시리즈 S를, 소니"
-]
+API_KEY = ''
 
-target = "비디오 게임기 시장 강자인 소니와 마이크로소프트(MS)가 최신형 비디오 게임기인 플레이스테이션5(PS5)와 X박스 시리즈X를 지난해 11월에 출시했고 현재로 1년을 맞았다."
+ENGINE_ID = ''
+
+embed = hub.KerasLayer("https://tfhub.dev/google/universal-sentence-encoder/4")
+es = Elasticsearch(["elasticsearch"], PORT=9200, http_auth=("elastic", "123456"))
+index_name="test_similarity"
+
+# 검색 수행하기 
+def search(search_text):
+    search_result = []
+    search_term = ''
+    for i in search_text:
+        if(len(i) < 32):
+            search_term = i
+        else:
+            search_term = i[:32]
+            break
+        service = build("customsearch", "v1", developerKey=API_KEY)
+        res = service.cse().list(q=search_term, cx=ENGINE_ID).execute()
+        j=0
+        for k in res['items']:
+            search_temp = {}
+            search_temp['url'] = k['link']
+            search_temp['title'] = k['title']
+            search_temp['snippet'] = k['snippet']
+            search_result.append(search_temp)
+            if(j+1 ==2): 
+                break
+            else:
+                j+=1
+
+    return search_result
+    
+def crawling(urls):
+    i = 0
+    for url in urls :
+        webpage = requests.get(url['url'])
+        title = url['title']
+        snippet = url['snippet'].replace('\xa0',"")
+        soup = BeautifulSoup(webpage.content, "html.parser")
+        find = soup.find_all(['div', 'p'])
+        description = ''
+        for f in find : 
+            text = f.get_text()
+            text = text.replace('\n',"")
+            text = text.replace('\xa0',"")
+            description += text
+        try:
+            embeddings=embed([description])
+            text_vector=np.array(embeddings[0]).tolist()
+            doc={'idx':i+1,'text':description, 'title':title, 'snippet':snippet, 'text-vector':text_vector}
+        except:
+            print('no data')
+            break
+        i+=1
+        es.index(index=index_name, id=i, body=doc)
+        
+    es.indices.refresh(index=index_name)
+
+
+    return 
 
 # 유사도 검색하기
-def test_similarity(target, embed):
-    query = target
+def test_similarity(search_text):
+    query = ''
+    for text in search_text:
+        query += (text + ' ')
     embeddings=embed([query])
     query_vector=np.array(embeddings[0]).tolist()
     index_name="test_similarity"
@@ -35,52 +93,19 @@ def test_similarity(target, embed):
         body={
             "size": 5,
             "query":script_query,
-            "_source": {"includes":["idx", "text"]}
+            "_source": {"includes":["idx", "title", "snippet"]}
         }
     )
     result=[]
-    search_time = time.time() - search_start
-    print()
-    print("{} total hits.".format(response["hits"]["total"]["value"]))
-    print("search time: {:.2f} ms".format(search_time * 1000))
     for hit in response["hits"]["hits"]:
-        print("id: {}, score: {}".format(hit["_id"], hit["_score"]))
-        print(hit["_source"])
-        print()
-        tmp={"id":hit["_source"]["idx"], "score":hit["_score"]}
+        tmp={"id":hit["_source"]["idx"], "score":hit["_score"], "title":hit["_source"]["title"]}
         result.append(tmp)
 
-    print(result)
     return result
 
-# 텍스트 임베딩 함수
-def insert_search_list(embed):
-    # data = list(cursor.fetchall())
-
-    # 데이터 집어넣기
-    for i in range(len(data)):
-        try:
-            description=data[i].replace("\n"," ").replace("'",'').replace('"','').strip()
-        except:
-            description=""
-        try:
-            embeddings=embed([description])
-            text_vector=np.array(embeddings[0]).tolist()
-            doc={'idx':i+1,'text':description, 'text-vector':text_vector}
-        except:
-            print('no data')
-            print('마지막 인덱스', i)
-            break
-        es.index(index=index_name, id=i, body=doc)
-        
-    es.indices.refresh(index=index_name)
 
 def initialize_search_list():
     os.environ["TFHUB_CACHE_DIR"] = "/tmp/tfhub"
-    embed = hub.KerasLayer("https://tfhub.dev/google/universal-sentence-encoder/4")
-    #insert_search_list(embed)
-
-    index_name="test_similarity"
     if es.indices.exists(index=index_name):
         es.indices.delete(index=index_name)
     # 인덱스 생성
@@ -89,6 +114,12 @@ def initialize_search_list():
             "properties":{
                 "idx":{
                     "type" :"integer"
+                },
+                "title":{
+                    "type":"text"
+                },
+                "snippet":{
+                    "type":"text"
                 },
                 "text":{
                     "type":"text"
@@ -100,14 +131,15 @@ def initialize_search_list():
             }
         }
     })
-    #test_similarity(target,embed)
+    es.indices.refresh(index=index_name)
 
 
-if __name__ == '__main__':
-    es = Elasticsearch(["elasticsearch"], PORT=9200, http_auth=("elastic", "123456"))
-
-    initialize_search_list()
-
+# if __name__ == '__main__':
+#     es = Elasticsearch(["elasticsearch"], PORT=9200, http_auth=("elastic", "123456"))
+    # initialize_search_list()
+    # search_urls = search(search_text)
+    # crawling(search_urls)
+    # result = test_similarity(search_text)
 
 
     
