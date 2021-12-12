@@ -7,9 +7,7 @@ import os
 import requests
 from bs4 import BeautifulSoup
 
-API_KEY = ''
 
-ENGINE_ID = ''
 
 embed = hub.KerasLayer("https://tfhub.dev/google/universal-sentence-encoder/4")
 es = Elasticsearch(["elasticsearch"], PORT=9200, http_auth=("elastic", "123456"))
