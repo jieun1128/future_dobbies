@@ -48,3 +48,4 @@ class searchTEXT(APIView):
 
         return JsonResponse(result, safe=False)
 
+
